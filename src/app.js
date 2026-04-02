@@ -15,10 +15,10 @@ const app = express();
 
 const corsOrigins = process.env.CORS_ORIGIN
   ? process.env.CORS_ORIGIN.split(",").map((s) => s.trim()).filter(Boolean)
-  : null;
+  : ['https://bmz-wine.vercel.app', 'http://localhost:3000', 'http://localhost:5173'];
 app.use(
   cors({
-    origin: corsOrigins && corsOrigins.length ? corsOrigins : true,
+    origin: corsOrigins,
     credentials: true,
   })
 );
