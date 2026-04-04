@@ -38,6 +38,12 @@ Production:
 npm start
 ```
 
+Демо-данные (категории, контент главной, **автовесы**: 3 подкатегории + товары):
+
+```bash
+npm run seed
+```
+
 Health check:
 - `GET /api/health`
 
@@ -114,7 +120,15 @@ Verify OTP:
 
 Убедись, что `VITE_API_BASE_URL` на фронте **без завершающего `/`**, иначе получится `//api/...` и ломаются запросы.
 
-## 4) Public catalog endpoints
+## 4) Контент главной страницы
+
+- `GET /api/catalog/home-content` — публично, merged дефолт + БД
+- `GET /api/admin/home-content` — с JWT, то же для редактора
+- `PUT /api/admin/home-content` — тело: полный JSON объекта (`hero`, `stats`, `utp`, …), см. `src/data/homeDefaults.js`
+
+После изменения структуры дефолтов обновите и фронт `front/src/data/homeDefaults.js` (копия для офлайн и кнопки «Сброс»).
+
+## 5) Public catalog endpoints
 
 - `GET /api/catalog/categories`
 - `GET /api/catalog/categories/:slug`
@@ -123,7 +137,7 @@ Verify OTP:
 - `GET /api/catalog/products/:slug`
 - `GET /api/catalog/tree`
 
-## 5) Admin CRUD endpoints
+## 6) Admin CRUD endpoints
 
 ### Categories
 - `GET /api/admin/categories`

@@ -34,14 +34,15 @@ router.post(
     body("sku").optional().isString(),
     body("shortDescription").optional().isString(),
     body("description").optional().isString(),
-    body("price").optional().isNumeric(),
+    body("price").optional().isFloat(),
     body("currency").optional().isString(),
     body("images").optional().isArray(),
+    body("accent").optional().isIn(["blue", "green", "orange"]),
     body("specs").optional().isObject(),
     body("tags").optional().isArray(),
     body("isActive").optional().isBoolean(),
     body("inStock").optional().isBoolean(),
-    body("order").optional().isNumeric(),
+    body("order").optional().isFloat(),
     validateRequest,
   ],
   async (req, res, next) => {
@@ -55,7 +56,7 @@ router.post(
       if (!subcategory) return res.status(400).json({ message: "Invalid subcategory" });
 
       const slug = slugify(req.body.slug || req.body.name);
-      const item = await Product.create({
+      const created = await Product.create({
         category: req.body.category,
         subcategory: req.body.subcategory,
         name: req.body.name.trim(),
@@ -68,12 +69,16 @@ router.post(
         images: req.body.images || [],
         specs: req.body.specs || {},
         tags: req.body.tags || [],
+        accent: req.body.accent || "blue",
         isActive: req.body.isActive ?? true,
         inStock: req.body.inStock ?? true,
         order: req.body.order ?? 0,
       });
 
-      const populated = await item.populate("category").populate("subcategory");
+      const populated = await Product.findById(created._id)
+        .populate("category")
+        .populate("subcategory")
+        .lean();
       return res.status(201).json(populated);
     } catch (error) {
       return next(error);
@@ -92,14 +97,15 @@ router.put(
     body("sku").optional().isString(),
     body("shortDescription").optional().isString(),
     body("description").optional().isString(),
-    body("price").optional().isNumeric(),
+    body("price").optional().isFloat(),
     body("currency").optional().isString(),
     body("images").optional().isArray(),
+    body("accent").optional().isIn(["blue", "green", "orange"]),
     body("specs").optional().isObject(),
     body("tags").optional().isArray(),
     body("isActive").optional().isBoolean(),
     body("inStock").optional().isBoolean(),
-    body("order").optional().isNumeric(),
+    body("order").optional().isFloat(),
     validateRequest,
   ],
   async (req, res, next) => {

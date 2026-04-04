@@ -12,6 +12,11 @@ const subcategorySchema = new mongoose.Schema(
     slug: { type: String, required: true, unique: true, trim: true },
     description: { type: String, default: "" },
     image: { type: String, default: "" },
+    accent: {
+      type: String,
+      enum: ["blue", "green", "orange"],
+      default: "blue",
+    },
     isActive: { type: Boolean, default: true },
     order: { type: Number, default: 0 },
   },

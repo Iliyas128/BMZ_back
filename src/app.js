@@ -9,6 +9,8 @@ const adminOtpRoute = require("./routes/admin.otp");
 const adminCategoriesRoute = require("./routes/admin.categories");
 const adminSubcategoriesRoute = require("./routes/admin.subcategories");
 const adminProductsRoute = require("./routes/admin.products");
+const adminHomeContentRoute = require("./routes/admin.home-content");
+const adminSiteSettingsRoute = require("./routes/admin.site-settings");
 const { notFound, errorHandler } = require("./middlewares/error");
 const { connectDB } = require("./config/db");
 const { assertEnv } = require("./config/env");
@@ -50,6 +52,8 @@ app.use("/api/admin/otp", adminOtpRoute);
 app.use("/api/admin/categories", adminCategoriesRoute);
 app.use("/api/admin/subcategories", adminSubcategoriesRoute);
 app.use("/api/admin/products", adminProductsRoute);
+app.use("/api/admin/home-content", adminHomeContentRoute);
+app.use("/api/admin/site-settings", adminSiteSettingsRoute);
 
 app.use(notFound);
 app.use(errorHandler);

@@ -2,8 +2,33 @@ const express = require("express");
 const Category = require("../models/Category");
 const Subcategory = require("../models/Subcategory");
 const Product = require("../models/Product");
+const HomeContent = require("../models/HomeContent");
+const SiteSettings = require("../models/SiteSettings");
+const { HOME_DEFAULTS } = require("../data/homeDefaults");
+const { mergeDeep } = require("../utils/mergeDeep");
 
 const router = express.Router();
+
+router.get("/site-settings", async (req, res, next) => {
+  try {
+    const doc = await SiteSettings.findOne().lean();
+    const raw = doc?.whatsappE164 || "";
+    const whatsappE164 = String(raw).replace(/\D/g, "");
+    res.json({ whatsappE164 });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get("/home-content", async (req, res, next) => {
+  try {
+    const doc = await HomeContent.findOne().lean();
+    const merged = mergeDeep(HOME_DEFAULTS, doc?.snapshot || {});
+    res.json(merged);
+  } catch (error) {
+    next(error);
+  }
+});
 
 router.get("/categories", async (req, res, next) => {
   try {

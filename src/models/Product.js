@@ -22,6 +22,11 @@ const productSchema = new mongoose.Schema(
     price: { type: Number, default: 0 },
     currency: { type: String, default: "KZT" },
     images: [{ type: String }],
+    accent: {
+      type: String,
+      enum: ["blue", "green", "orange"],
+      default: "blue",
+    },
     specs: { type: Object, default: {} },
     tags: [{ type: String }],
     isActive: { type: Boolean, default: true },

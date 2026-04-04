@@ -30,6 +30,7 @@ router.post(
     body("slug").optional().isString(),
     body("description").optional().isString(),
     body("image").optional().isString(),
+    body("accent").optional().isIn(["blue", "green", "orange"]),
     body("isActive").optional().isBoolean(),
     body("order").optional().isNumeric(),
     validateRequest,
@@ -46,6 +47,7 @@ router.post(
         slug,
         description: req.body.description || "",
         image: req.body.image || "",
+        accent: req.body.accent || "blue",
         isActive: req.body.isActive ?? true,
         order: req.body.order ?? 0,
       });
@@ -67,6 +69,7 @@ router.put(
     body("slug").optional().isString(),
     body("description").optional().isString(),
     body("image").optional().isString(),
+    body("accent").optional().isIn(["blue", "green", "orange"]),
     body("isActive").optional().isBoolean(),
     body("order").optional().isNumeric(),
     validateRequest,
