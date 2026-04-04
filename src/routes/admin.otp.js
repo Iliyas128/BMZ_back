@@ -38,17 +38,43 @@ router.post(
         expiresAt,
       });
 
-      await sendAdminOtpEmail({
-        to: process.env.ADMIN_EMAIL,
-        code,
-        requesterEmail: doc.requesterEmail,
-        requesterName: doc.requesterName,
-      });
+      let delivered = false;
+      try {
+        const result = await sendAdminOtpEmail({
+          to: process.env.ADMIN_EMAIL,
+          code,
+          requesterEmail: doc.requesterEmail,
+          requesterName: doc.requesterName,
+        });
+        delivered = result.delivered;
+      } catch (sendErr) {
+        await AdminOtp.findByIdAndDelete(doc._id);
+        // eslint-disable-next-line no-console
+        console.error("[OTP] sendMail failed:", sendErr.message);
+        return res.status(502).json({
+          message:
+            "Не удалось отправить письмо с кодом. Проверьте SMTP (логин, пароль приложения, хост/порт) в переменных окружения на Vercel.",
+        });
+      }
+
+      // Локально без SMTP код пишется в консоль. На Vercel (любой деплой) SMTP обязателен — иначе кода негде увидеть.
+      const allowConsoleOtp =
+        !process.env.VERCEL && String(process.env.NODE_ENV).toLowerCase() !== "production";
+      if (!allowConsoleOtp && !delivered) {
+        await AdminOtp.findByIdAndDelete(doc._id);
+        return res.status(503).json({
+          message:
+            "Не настроен SMTP: письмо с кодом не отправляется. В Vercel → Settings → Environment Variables добавьте SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS (и SMTP_FROM, при порте 465 — SMTP_SECURE=true).",
+        });
+      }
 
       return res.json({
         requestId: String(doc._id),
         expiresAt: doc.expiresAt.toISOString(),
-        message: "OTP sent to admin email",
+        message: delivered
+          ? "OTP sent to admin email"
+          : "SMTP не настроен — код смотрите в логе сервера (режим разработки).",
+        emailDelivered: delivered,
       });
     } catch (error) {
       return next(error);

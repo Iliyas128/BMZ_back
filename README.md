@@ -95,6 +95,25 @@ Verify OTP:
 }
 ```
 
+**Важно:** это **письмо на email** администратора (`ADMIN_EMAIL`), не SMS. На localhost без `SMTP_*` код только **пишется в консоль** сервера (`npm run dev`) — поэтому кажется, что «всё работает». На **Vercel** консоли под рукой нет: без настроенного SMTP письмо не уйдёт.
+
+**Vercel → Project → Settings → Environment Variables** (для backend-проекта):
+
+| Переменная | Пример |
+|------------|--------|
+| `MONGO_URI` | строка Atlas |
+| `JWT_SECRET` | длинная случайная строка |
+| `ADMIN_EMAIL` | почта, куда приходит код |
+| `SMTP_HOST` | например `smtp.gmail.com` или хост Brevo/SendGrid |
+| `SMTP_PORT` | `587` (STARTTLS) или `465` (SSL) |
+| `SMTP_SECURE` | `false` для 587, **`true`** для 465 |
+| `SMTP_USER` | логин SMTP |
+| `SMTP_PASS` | пароль или **пароль приложения** (для Gmail) |
+| `SMTP_FROM` | (опц.) адрес «От кого» |
+| `CORS_ORIGIN` | `https://твой-фронт.vercel.app` (без слэша в конце) |
+
+Убедись, что `VITE_API_BASE_URL` на фронте **без завершающего `/`**, иначе получится `//api/...` и ломаются запросы.
+
 ## 4) Public catalog endpoints
 
 - `GET /api/catalog/categories`

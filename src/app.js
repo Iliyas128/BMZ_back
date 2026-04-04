@@ -10,6 +10,8 @@ const adminCategoriesRoute = require("./routes/admin.categories");
 const adminSubcategoriesRoute = require("./routes/admin.subcategories");
 const adminProductsRoute = require("./routes/admin.products");
 const { notFound, errorHandler } = require("./middlewares/error");
+const { connectDB } = require("./config/db");
+const { assertEnv } = require("./config/env");
 
 const app = express();
 
@@ -24,6 +26,17 @@ app.use(
 );
 app.use(express.json({ limit: "2mb" }));
 app.use(morgan("dev"));
+
+// Middleware to ensure DB connection
+app.use(async (req, res, next) => {
+  try {
+    const { mongoUri } = assertEnv();
+    await connectDB(mongoUri);
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
 
 app.get("/", (req, res) => {
   res.json({ message: "BMZ backend API" });

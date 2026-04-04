@@ -1,11 +1,18 @@
 const mongoose = require("mongoose");
 
+let isConnected = false;
+
 async function connectDB(mongoUri) {
+  if (isConnected) {
+    return;
+  }
+
   mongoose.set("strictQuery", true);
   try {
     await mongoose.connect(mongoUri, {
       serverSelectionTimeoutMS: 12_000,
     });
+    isConnected = true;
   } catch (err) {
     const msg = err && err.message ? String(err.message) : "";
     if (/bad auth|authentication failed/i.test(msg)) {

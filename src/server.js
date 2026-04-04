@@ -1,6 +1,5 @@
 require("./config/env");
 const app = require("./app");
-const { connectDB } = require("./config/db");
 const { assertEnv } = require("./config/env");
 
 const port = Number(process.env.PORT) || 4000;
@@ -8,7 +7,6 @@ const port = Number(process.env.PORT) || 4000;
 async function bootstrap() {
   try {
     const { mongoUri } = assertEnv();
-    await connectDB(mongoUri);
     app.listen(port, () => {
       // eslint-disable-next-line no-console
       console.log(`Backend listening on http://localhost:${port}`);
@@ -20,4 +18,8 @@ async function bootstrap() {
   }
 }
 
-bootstrap();
+if (require.main === module) {
+  bootstrap();
+}
+
+module.exports = app;
