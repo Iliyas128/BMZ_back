@@ -28,34 +28,6 @@ const DEFAULT_CATEGORIES = [
     image: "/images/vagonVesy.png",
     order: 1,
   },
-  {
-    name: "Фундамент и основание",
-    slug: "fundament",
-    description: "Раздельные, сплошные и приямочного типа решения с пандусами.",
-    image: "/images/fundament.png",
-    order: 2,
-  },
-  {
-    name: "Автоматизация",
-    slug: "avtomatizatsiya",
-    description: "ПО и интеграции для учета, контроля и удаленного мониторинга.",
-    image: "/images/avtomatization.jpg",
-    order: 3,
-  },
-  {
-    name: "Оборудование",
-    slug: "oborudovanie",
-    description: "Тензодатчики, индикаторы и компоненты для разных условий эксплуатации.",
-    image: "/images/oborudovanie.png",
-    order: 4,
-  },
-  {
-    name: "Услуги",
-    slug: "uslugi",
-    description: "Монтаж и ПНР, калибровка, поверка, модернизация и ремонт.",
-    image: "/images/Uslugi.png",
-    order: 5,
-  },
 ];
 
 const AUTO_SUBS = [
